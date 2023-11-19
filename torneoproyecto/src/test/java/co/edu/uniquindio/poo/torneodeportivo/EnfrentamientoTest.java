@@ -36,11 +36,15 @@ public class EnfrentamientoTest {
 
         var equipo1 = new Equipo("Uniquindio", representante1,TipoEquipo.MASCULINO);
         var equipo2 = new Equipo("LosMejores", representante2,TipoEquipo.MASCULINO);
+        Juez juez = new Juez ("marcos", "Agudelo", "mc@gmail.com", "7315674", "456");
 
         torneo.registrarEquipo(equipo1);
         torneo.registrarEquipo(equipo2);
+        torneo.registrarJuez(juez);
         Lugar lugar = new Lugar("p1", "carrera 5");
         Enfrentamiento enfrentamiento = new Enfrentamiento (lugar, LocalDateTime.of(2023,10,31,14,0), equipo1, equipo2);
+        enfrentamiento.registrarJuez(juez);
+        torneo.registrarEnfrentamiento(enfrentamiento);
 
         // Recuperación y verificación de datos
         assertEquals(lugar,enfrentamiento.getLugar());
@@ -48,7 +52,7 @@ public class EnfrentamientoTest {
         assertEquals(equipo1,enfrentamiento.getEquipoLocal());
         assertEquals(equipo2,enfrentamiento.getEquipoVisitante());
         assertEquals(EstadoEnfrentamiento.PENDIENTE,enfrentamiento.getEstado());
-        //assertEquals(true ,enfrentamiento.getEstado().esValido(enfrentamiento.getFechaYHora(), null, null));
+        assertEquals(true, enfrentamiento.getJueces().contains(juez));
         LOG.info("Fin de prueba datos completos...");
     }
 
@@ -66,11 +70,12 @@ public class EnfrentamientoTest {
 
         var equipo1 = new Equipo("Uniquindio", representante1,TipoEquipo.MASCULINO);
         var equipo2 = new Equipo("LosMejores", representante2,TipoEquipo.MASCULINO);
-
+        
         torneo.registrarEquipo(equipo1);
         torneo.registrarEquipo(equipo2);
+        
         Lugar lugar = new Lugar("p1", "carrera 5");
-        Enfrentamiento enfrentamiento = new Enfrentamiento (lugar, LocalDateTime.of(2023,11,16,14,0), equipo1, equipo2);
+        Enfrentamiento enfrentamiento = new Enfrentamiento (lugar, LocalDateTime.of(2023,11,24,14,0), equipo1, equipo2);
 
         // Recuperación y verificación de datos
         assertThrows(Throwable.class , ()-> torneo.registrarEnfrentamiento(enfrentamiento));

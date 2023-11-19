@@ -7,29 +7,84 @@
  */
 package co.edu.uniquindio.poo.torneodeportivo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+
 import static co.edu.uniquindio.poo.util.AssertionUtil.ASSERTION;
-
-public record Equipo(String nombre,Persona representante,Collection<Jugador> jugadores, TipoEquipo tipoEquipo) {
-    public Equipo{
-        ASSERTION.assertion( nombre != null && !nombre.isBlank() , "El nombre es requerido");
-        ASSERTION.assertion( representante != null , "El representante es requerido");
-        ASSERTION.assertion( tipoEquipo != null , "El tipo de equipo es requerido");
+public class Equipo {
+    private String nombre;
+    private Persona representante;
+    private Collection<Jugador> jugadores;
+    private TipoEquipo tipoEquipo;
+    private int victorias;
+    private int empates;
+    private int derrotas;
+    public List<Enfrentamiento> enfrentamientos;
+    public Equipo(){
     }
 
-    public Equipo(String nombre,Persona representante, TipoEquipo tipoEquipo){
-        this(nombre,representante,new LinkedList<>(),tipoEquipo);
+    
+    public Equipo(String nombre, Persona representante, TipoEquipo tipoEquipo) {
+        
+        this.nombre = nombre;
+        this.representante = representante;
+        this.tipoEquipo = tipoEquipo;
+        this.jugadores = new LinkedList<>(); // Inicializa la colección de jugadores
+        this.victorias = 0;
+        this.empates = 0;
+        this.derrotas = 0;
+        this.enfrentamientos = new ArrayList<>();
     }
 
-    public TipoEquipo getTipoEquipo(){
-        return this.tipoEquipo;
+
+    // Método para registrar los resultados de un partido
+    public void registrarResultado(String resultado) {
+        if (resultado.equals("victoria")) {
+            this.victorias++;
+        } else if (resultado.equals("empate")) {
+            this.empates++;
+        } else if (resultado.equals("derrota")) {
+            this.derrotas++;
+        }
     }
 
+    public int getVictorias(){
+        return this.victorias;
+    }
+
+    public int getEmpates() {
+        return this.empates;
+    }
+
+    public int getDerrotas() {
+        return this.derrotas;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+    public TipoEquipo getTipoEquipo() {
+        return tipoEquipo;
+    }
+
+    public void incrementarVictorias() {
+        this.victorias++;
+    }
+    public void incrementarEmpates() {
+        this.empates++;
+    }
+    public void incrementarDerrotas() {
+        this.derrotas++;
+    }
+    public Persona getRepresentante(){
+        return this.representante;
+    }
     /**
      * Permite registrar un jugador en un equipo siempre y cuando no exista ya un jugador registrado en el equipo con el mismo nombre y apellido
      * @param jugador Jugador que se desea registrar.
@@ -66,6 +121,20 @@ public record Equipo(String nombre,Persona representante,Collection<Jugador> jug
 
     private void validarTipo(Jugador jugador) {
         ASSERTION.assertion( tipoEquipo.esValido(jugador),"El jugador a inscribir no es aceptable en el tipo de equipo");
+    }
+
+    
+    public List<Enfrentamiento> obtenerEnfrentamientosEquipo(String nombreEquipo) {
+        List<Enfrentamiento> enfrentamientosDelEquipo = new ArrayList<>();
+    
+        for (Enfrentamiento enfrentamiento : enfrentamientos) {
+            if (enfrentamiento.getEquipoLocal().getNombre().equals(nombreEquipo) ||
+                enfrentamiento.getEquipoVisitante().getNombre().equals(nombreEquipo)) {
+                enfrentamientosDelEquipo.add(enfrentamiento);
+            }
+        }
+    
+        return enfrentamientosDelEquipo;
     }
     
 }

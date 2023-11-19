@@ -8,10 +8,12 @@
 package co.edu.uniquindio.poo.torneodeportivo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
@@ -110,4 +112,52 @@ public class EquipoTest {
         
         LOG.info("Fin de prueba inscripcionNoAbierta...");
     }
+    @Test
+    public void testRegistrarVictoria() {
+        Equipo equipo = new Equipo();
+        equipo.registrarResultado("victoria");
+        assertEquals(1, equipo.getVictorias());
+    }
+
+    @Test
+    public void testRegistrarEmpate() {
+        Equipo equipo = new Equipo();
+        equipo.registrarResultado("empate");
+        assertEquals(1, equipo.getEmpates());
+    }
+
+    @Test
+    public void testRegistrarDerrota() {
+        Equipo equipo = new Equipo();
+        equipo.registrarResultado("derrota");
+        assertEquals(1, equipo.getDerrotas());
+    }
+    @Test
+    public void obtenerEnfrentamientosEquipo() {
+        LOG.info("Inicio de prueba datos completos...");
+    
+        // Crear los objetos necesarios
+        Torneo torneo = new Torneo("Copa Mundo", LocalDate.now().plusMonths(1), LocalDate.now().minusDays(15), LocalDate.now().plusDays(15), (byte)24, (byte)0, 0, TipoTorneo.LOCAL, CaracterTorneo.TorneoMasculino);
+        var representante1 = new Persona("Robinson", "Pulgarin", "rpulgarin@email.com", "6067359300");
+        var representante2 = new Persona("Marcos", "Gomez", "mg@email.com", "6067479300");
+        var juez1 = new Juez("Bryan", "perez", "123", "234", "xd");
+        var equipo1 = new Equipo("Uniquindio", representante1, TipoEquipo.MASCULINO);
+        var equipo2 = new Equipo("LosMejores", representante2, TipoEquipo.MASCULINO);
+    
+        torneo.registrarEquipo(equipo1);
+        torneo.registrarEquipo(equipo2);
+    
+        Lugar lugar = new Lugar("p1", "carrera 5");
+        Enfrentamiento enfrentamiento = new Enfrentamiento(lugar, LocalDateTime.now().plusDays(2), equipo1, equipo2, juez1);
+    
+        enfrentamiento.registrarResultadoLocal((byte) 5);
+        enfrentamiento.registrarResultadoVisitante((byte) 0);
+    
+        // Recuperación y verificación de datos
+        assertTrue(equipo1.obtenerEnfrentamientosEquipo("Uniquindio").contains(enfrentamiento));
+        assertFalse(equipo1.obtenerEnfrentamientosEquipo("LosMejores").contains(enfrentamiento));
+    
+        LOG.info("Fin de prueba datos completos...");
+    }
+    
 }

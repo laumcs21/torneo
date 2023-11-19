@@ -38,8 +38,8 @@ public class JugadorTest {
         equipo.registrarJugador(jugador);
 
         // Recuperación y verificación de datos
-        assertTrue(equipo.jugadores().contains(jugador));
-        assertEquals(1, equipo.jugadores().size());
+        assertTrue(equipo.getJugadores().contains(jugador));
+        assertEquals(1, equipo.getJugadores().size());
         LOG.info("Fin de prueba registrarJugadorEquipo...");
     }
 
@@ -78,8 +78,8 @@ public class JugadorTest {
         torneo.registrarJugador("Uniquindio",jugador);
 
         // Recuperación y verificación de datos
-        assertTrue(equipo.jugadores().contains(jugador));
-        assertEquals(1, equipo.jugadores().size());
+        assertTrue(equipo.getJugadores().contains(jugador));
+        assertEquals(1, equipo.getJugadores().size());
         LOG.info("Fin de prueba registrarJugadorTorneo...");
     }
 
@@ -105,9 +105,9 @@ public class JugadorTest {
         torneo.registrarEquipo(equipo);
 
         //Recuperación y verificación de datos
-        assertTrue(equipo.jugadores().contains(jugador));
-        assertTrue(equipo.jugadores().contains(jugador1));
-        assertEquals(2, equipo.jugadores().size());
+        assertTrue(equipo.getJugadores().contains(jugador));
+        assertTrue(equipo.getJugadores().contains(jugador1));
+        assertEquals(2, equipo.getJugadores().size());
         LOG.info("Fin de prueba registrarJugadorTorneo...");
     }
         /**
@@ -173,8 +173,8 @@ public class JugadorTest {
         torneo.registrarJugador("Uniquindio",jugador);
 
         // Recuperación y verificación de datos
-        assertTrue(equipo.jugadores().contains(jugador));
-        assertEquals(1, equipo.jugadores().size());
+        assertTrue(equipo.getJugadores().contains(jugador));
+        assertEquals(1, equipo.getJugadores().size());
         LOG.info("Fin de prueba registrarJugadorTorneoSinLimiteEdad...");
     }
 

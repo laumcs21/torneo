@@ -7,6 +7,7 @@
  */
 package co.edu.uniquindio.poo.torneodeportivo;
 
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.function.Predicate;
 import static co.edu.uniquindio.poo.util.AssertionUtil.ASSERTION;
-
 public class Torneo {
     private final String nombre;
     private LocalDate fechaInicio;
@@ -25,7 +25,7 @@ public class Torneo {
     private final int valorInscripcion;
     private final TipoTorneo tipoTorneo;
     private final Collection<Equipo> equipos;
-    private final Collection<Juez> jueces;
+    public final Collection<Juez> jueces;
     private final CaracterTorneo caracterTorneo;
     private final Collection<Enfrentamiento> enfrentamientos;
 
@@ -148,7 +148,7 @@ public class Torneo {
      * Valida que no exista ya un equipo registrado con el mismo nombre, en caso de haberlo genera un assertion error.
      */
     private void validarEquipoExiste(Equipo equipo) {
-        boolean existeEquipo = buscarEquipoPorNombre(equipo.nombre()).isPresent();
+        boolean existeEquipo = buscarEquipoPorNombre(equipo.getNombre()).isPresent();
         ASSERTION.assertion( !existeEquipo,"El equipo ya esta registrado");
     }
 
@@ -166,7 +166,7 @@ public class Torneo {
      * @return Un Optional<Equipo> con el equipo cuyo nombre sea igual al nombre buscado, o un Optional vacio en caso de no encontrar un equipo con nombre igual al dado.
      */
     public Optional<Equipo> buscarEquipoPorNombre(String nombre){
-        Predicate<Equipo> condicion = equipo->equipo.nombre().equals(nombre);
+        Predicate<Equipo> condicion = equipo->equipo.getNombre().equals(nombre);
         return equipos.stream().filter(condicion).findAny();
     }
 
@@ -243,8 +243,8 @@ public class Torneo {
      * Valida que no exista ya un juez registrado con el mismo numero de licencia.
      */
     private void validarJuezExiste(Juez juez) {
-        boolean existeEquipo = buscarJuez(juez).isPresent();
-        ASSERTION.assertion( !existeEquipo,"El equipo ya esta registrado");
+        boolean existeJuez = buscarJuez(juez).isPresent();
+        ASSERTION.assertion( !existeJuez,"El equipo ya esta registrado");
     }
 
     /**
@@ -266,14 +266,35 @@ public class Torneo {
         return jueces.stream().filter(nombreIgual.and(apellidoIgual)).findAny();
     }
 
-        /**
-     * Permite registrar un enfrentamiento en el torneo
-     * @param enfrentamiento Enfrentamiento a ser registrado
-     * @throws Se genera un error si el tipo de equipo de equipo a registrar en el enfrentamiento es incompatible, y si el estado a asignar es inválido
-     */
+    // permite registrar los enfrentamientos al torneo
     public void registrarEnfrentamiento(Enfrentamiento enfrentamiento) {
         validarEstado(enfrentamiento); 
+        validarJuezEnfrentamiento(enfrentamiento);
+        validarEquiposEnfrentamiento(enfrentamiento.getEquipoLocal());
+        validarEquiposEnfrentamiento(enfrentamiento.getEquipoVisitante());
         enfrentamientos.add(enfrentamiento);
+}
+
+    //Devuelve un listado de enfrentamientos
+    public Collection<Enfrentamiento> getEnfrentamientos() {
+        return Collections.unmodifiableCollection(enfrentamientos);
+    }
+
+
+    //valida que los jueces registrados en el enfrentamiento, sean parte del listado de jueces del torneo
+    public void validarJuezEnfrentamiento(Enfrentamiento enfrentamiento) {
+        boolean todosJuecesValidos = enfrentamiento.jueces.stream().allMatch(juez ->
+                jueces.stream()
+                        .anyMatch(j -> j.getNombre().equals(juez.getNombre()) && j.getApellido().equals(juez.getApellido()))
+        );
+
+        ASSERTION.assertion(todosJuecesValidos, "El listado de jueces no contiene jueces válidos");
+    }
+
+
+    private void validarEquiposEnfrentamiento(Equipo equipo) {
+        boolean existeEquipo = buscarEquipoPorNombre(equipo.getNombre()).isPresent();
+        ASSERTION.assertion( existeEquipo,"El equipo no está registrado");
     }
 
         /**
@@ -283,5 +304,21 @@ public class Torneo {
     private void validarEstado(Enfrentamiento enfrentamiento) {
         ASSERTION.assertion( enfrentamiento.getEstado().esValido(enfrentamiento.getFechaYHora(), enfrentamiento.getResultadoLocal(), enfrentamiento.getResultadoVisitante()),"El estado del enfrentamiento a inscribir no es aceptable");
     }
-    
+    public void registrarPartido(String equipoLocal, String equipoVisitante, String resultado) {
+        Equipo local = buscarEquipoPorNombre(equipoLocal).orElse(null);
+        Equipo visitante = buscarEquipoPorNombre(equipoVisitante).orElse(null);
+
+        if (local != null && visitante != null) {
+            if (resultado.equals("victoria")) {
+                local.registrarResultado("victoria");
+                visitante.registrarResultado("derrota");
+            } else if (resultado.equals("empate")) {
+                local.registrarResultado("empate");
+                visitante.registrarResultado("empate");
+            } else if (resultado.equals("derrota")) {
+                local.registrarResultado("derrota");
+                visitante.registrarResultado("victoria");
+            }
+        }
+    }
 }

@@ -2,6 +2,7 @@ package co.edu.uniquindio.poo.torneodeportivo;
 import java.time.LocalDateTime;
 
 public enum EstadoEnfrentamiento {
+// devuelve que estado tiene el enfrentamiento por su fecha; hora y resultado
     PENDIENTE {
     
         public boolean esValido(LocalDateTime fechaYHora, Byte resultadoLocal, Byte resultadoVisitante) {

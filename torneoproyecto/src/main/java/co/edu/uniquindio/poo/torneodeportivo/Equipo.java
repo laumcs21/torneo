@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 
 import static co.edu.uniquindio.poo.util.AssertionUtil.ASSERTION;
 public class Equipo {
+
     private String nombre;
     private Persona representante;
     private Collection<Jugador> jugadores;
@@ -25,7 +26,6 @@ public class Equipo {
     private int victorias;
     private int empates;
     private int derrotas;
-    public List<Enfrentamiento> enfrentamientos;
     public Equipo(){
     }
 
@@ -39,11 +39,10 @@ public class Equipo {
         this.victorias = 0;
         this.empates = 0;
         this.derrotas = 0;
-        this.enfrentamientos = new ArrayList<>();
     }
 
 
-    // Método para registrar los resultados de un partido
+    // Método para registrar los resultados de un partido para devolver un numero de victorias, empates y derrotas
     public void registrarResultado(String resultado) {
         if (resultado.equals("victoria")) {
             this.victorias++;
@@ -94,7 +93,7 @@ public class Equipo {
         validarTipo(jugador);
         jugadores.add(jugador);
     }
-    
+// coleccion de jugadores
     public Collection<Jugador> getJugadores(){
         return Collections.unmodifiableCollection(jugadores);
     }
@@ -118,18 +117,17 @@ public class Equipo {
         boolean existeJugador = buscarJugador(jugador).isPresent();
         ASSERTION.assertion( !existeJugador,"El jugador ya esta registrado");
     }
-
+// valida el tipo de jugador en el tipo de equipo
     private void validarTipo(Jugador jugador) {
         ASSERTION.assertion( tipoEquipo.esValido(jugador),"El jugador a inscribir no es aceptable en el tipo de equipo");
     }
 
-    
-    public List<Enfrentamiento> obtenerEnfrentamientosEquipo(String nombreEquipo) {
+// obtiene la lista de enfrentamientos del equipo por su nombre
+    public List<Enfrentamiento> obtenerEnfrentamientosEquipo(Torneo torneo) {
         List<Enfrentamiento> enfrentamientosDelEquipo = new ArrayList<>();
     
-        for (Enfrentamiento enfrentamiento : enfrentamientos) {
-            if (enfrentamiento.getEquipoLocal().getNombre().equals(nombreEquipo) ||
-                enfrentamiento.getEquipoVisitante().getNombre().equals(nombreEquipo)) {
+        for (Enfrentamiento enfrentamiento : torneo.getEnfrentamientos()) {
+            if (enfrentamiento.contieneEquipo(this.nombre)){
                 enfrentamientosDelEquipo.add(enfrentamiento);
             }
         }

@@ -65,26 +65,34 @@ public class JuezTest {
         
         LOG.info("Fin de prueba registrarJugadoresRepetidosTorneo...");
     }
-            @Test
-    public void obtenerEnfrentamientosPorLicencia() {
+    @Test
+    public void obtenerEnfrentamientosJuez() {
         LOG.info("Inicio de prueba datos completos...");
-        // Almacenar los datos de prueba Copa Mundo|2023-10-01|2023-08-01|2023-09-15|24|0|0|LOCAL
-        Torneo torneo = new Torneo("Copa Mundo", LocalDate.now().plusMonths(1), LocalDate.now().minusDays(15), LocalDate.now().plusDays(15), (byte)24, (byte)0, 0,TipoTorneo.LOCAL, CaracterTorneo.TorneoMasculino);
+    
+        // Crear los objetos necesarios
+        Torneo torneo = new Torneo("Copa Mundo", LocalDate.now().plusMonths(1), LocalDate.now().minusDays(15), LocalDate.now().plusDays(15), (byte)24, (byte)0, 0, TipoTorneo.LOCAL, CaracterTorneo.TorneoMasculino);
         var representante1 = new Persona("Robinson", "Pulgarin", "rpulgarin@email.com", "6067359300");
         var representante2 = new Persona("Marcos", "Gomez", "mg@email.com", "6067479300");
-
-        var equipo1 = new Equipo("Uniquindio", representante1,TipoEquipo.MASCULINO);
-        var equipo2 = new Equipo("LosMejores", representante2,TipoEquipo.MASCULINO);
         var juez1 = new Juez("Bryan", "perez", "123", "234", "xd");
+        var equipo1 = new Equipo("Uniquindio", representante1, TipoEquipo.MASCULINO);
+        var equipo2 = new Equipo("LosMejores", representante2, TipoEquipo.MASCULINO);
+        // registra los equipos y juez
         torneo.registrarEquipo(equipo1);
         torneo.registrarEquipo(equipo2);
+        torneo.registrarJuez(juez1);
+        // crea el enfrentamiento
         Lugar lugar = new Lugar("p1", "carrera 5");
-        Enfrentamiento enfrentamiento1 = new Enfrentamiento (lugar, LocalDateTime.now().plusDays(2), equipo1, equipo2,juez1);
-
-        enfrentamiento1.registrarResultadoLocal((byte)5);
-        enfrentamiento1.registrarResultadoVisitante((byte)0);
+        Enfrentamiento enfrentamiento = new Enfrentamiento(lugar, LocalDateTime.now().plusDays(2), equipo1, equipo2, juez1);
+        // registra el enfrentamiento
+        enfrentamiento.registrarResultadoLocal((byte) 5);
+        enfrentamiento.registrarResultadoVisitante((byte) 0);
+        torneo.registrarEnfrentamiento(enfrentamiento);
+    
         // Recuperación y verificación de datos
-        assertEquals(true, juez1.obtenerEnfrentamientosPorJuez("xd").contains(enfrentamiento1));
+        assertEquals (1, juez1.obtenerEnfrentamientosJuez(torneo).size());
+        assertTrue(juez1.obtenerEnfrentamientosJuez(torneo).contains(enfrentamiento));
+        
+    
         LOG.info("Fin de prueba datos completos...");
     }
 

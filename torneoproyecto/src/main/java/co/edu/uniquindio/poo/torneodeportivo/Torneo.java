@@ -291,7 +291,7 @@ public class Torneo {
         ASSERTION.assertion(todosJuecesValidos, "El listado de jueces no contiene jueces válidos");
     }
 
-
+// valida que el equipo del enfrentamiento este registrado por su nombre
     private void validarEquiposEnfrentamiento(Equipo equipo) {
         boolean existeEquipo = buscarEquipoPorNombre(equipo.getNombre()).isPresent();
         ASSERTION.assertion( existeEquipo,"El equipo no está registrado");
@@ -304,6 +304,7 @@ public class Torneo {
     private void validarEstado(Enfrentamiento enfrentamiento) {
         ASSERTION.assertion( enfrentamiento.getEstado().esValido(enfrentamiento.getFechaYHora(), enfrentamiento.getResultadoLocal(), enfrentamiento.getResultadoVisitante()),"El estado del enfrentamiento a inscribir no es aceptable");
     }
+// registra el partido de un equipo
     public void registrarPartido(String equipoLocal, String equipoVisitante, String resultado) {
         Equipo local = buscarEquipoPorNombre(equipoLocal).orElse(null);
         Equipo visitante = buscarEquipoPorNombre(equipoVisitante).orElse(null);

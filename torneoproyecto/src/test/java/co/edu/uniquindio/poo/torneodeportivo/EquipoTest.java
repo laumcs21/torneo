@@ -8,7 +8,6 @@
 package co.edu.uniquindio.poo.torneodeportivo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -146,16 +145,20 @@ public class EquipoTest {
     
         torneo.registrarEquipo(equipo1);
         torneo.registrarEquipo(equipo2);
+        torneo.registrarJuez(juez1);
     
         Lugar lugar = new Lugar("p1", "carrera 5");
         Enfrentamiento enfrentamiento = new Enfrentamiento(lugar, LocalDateTime.now().plusDays(2), equipo1, equipo2, juez1);
-    
+        // registra el enfrentamiento
         enfrentamiento.registrarResultadoLocal((byte) 5);
         enfrentamiento.registrarResultadoVisitante((byte) 0);
     
+        torneo.registrarEnfrentamiento(enfrentamiento);
+    
         // Recuperación y verificación de datos
-        assertTrue(equipo1.obtenerEnfrentamientosEquipo("Uniquindio").contains(enfrentamiento));
-        assertFalse(equipo1.obtenerEnfrentamientosEquipo("LosMejores").contains(enfrentamiento));
+        assertEquals (1, equipo1.obtenerEnfrentamientosEquipo(torneo).size());
+        assertTrue(equipo1.obtenerEnfrentamientosEquipo(torneo).contains(enfrentamiento));
+        assertEquals("Uniquindio", equipo1.obtenerEnfrentamientosEquipo(torneo).get(0).getEquipoLocal().getNombre());
     
         LOG.info("Fin de prueba datos completos...");
     }

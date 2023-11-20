@@ -64,6 +64,7 @@ public Enfrentamiento(Lugar lugar, LocalDateTime fechaYHora, Equipo equipoLocal,
         this.jueces = new LinkedList<>();
         this.resultadoLocal = null;
         this.resultadoVisitante = null;
+        this.juez = juez;
         this.estado = EstadoEnfrentamiento.PENDIENTE;
         this.jueces.add(juez);
     }
@@ -115,7 +116,7 @@ public Enfrentamiento(Lugar lugar, LocalDateTime fechaYHora, Equipo equipoLocal,
         assert estado.esValido(fechaYHora, resultadoLocal, resultadoVisitante);
         this.estado = estado;
     }
-
+// registra el resultado del equipo local
     public Byte registrarResultadoLocal (Byte resultado){
         assert resultado != null : "El resultado es requerido";
         this.resultadoLocal = resultado;
@@ -126,8 +127,7 @@ public Enfrentamiento(Lugar lugar, LocalDateTime fechaYHora, Equipo equipoLocal,
 
         return this.resultadoLocal;
     }
-    
-
+    // registra el resultado del equipo visitante
     public Byte registrarResultadoVisitante (Byte resultado){
         assert resultado != null : "El resultado es requerido";
         this.resultadoVisitante = resultado;
@@ -138,6 +138,15 @@ public Enfrentamiento(Lugar lugar, LocalDateTime fechaYHora, Equipo equipoLocal,
         
         return this.resultadoVisitante;
     }
+// valida que el nombre proporcionado sea igual al del equipo local o visitante
+    public boolean contieneEquipo(String nombre) {
+        return nombre.equals(equipoLocal.getNombre()) || nombre.equals(equipoVisitante.getNombre());
+    }
+// valida que la licencia proporcionada sea igual a la que tiene el juez
+    public boolean contieneJuez(String licencia) {
+            return licencia.equals(juez.getLicencia());
+    }
+// crea una lista de enfrentamientos con una lista de jueces
     class ListaEnfrentamientos {
         public List<Enfrentamiento> enfrentamientos;
         public Collection<Juez> jueces;
@@ -156,48 +165,3 @@ public Enfrentamiento(Lugar lugar, LocalDateTime fechaYHora, Equipo equipoLocal,
         }
 }
 }
-/* public class Enfrentamiento {
-    private Lugar lugar;
-    private LocalDate fechaEnfrentamiento;
-    private LocalDateTime horaEnfrentamiento;
-    private Equipo equipo1;
-    private Equipo equipo2;
-    private Collection<Juez> juecez;
-    private EstadoPartido estadoPartido;
-    private Resultado resultado;
-
-
-    public Enfrentamiento(Lugar lugar, LocalDate fechaEnfrentamiento,
-                          LocalDateTime horaEnfrentamiento, Equipo equipo1, Equipo equipo2) {
-        ASSERTION.assertion(lugar!=null, "el lugar no es válido");
-        ASSERTION.assertion(fechaEnfrentamiento!=null, "La fetch de enfrentamiento  no es válida");
-        ASSERTION.assertion(horaEnfrentamiento!=null, "La hora de enfrentamiento no es válida");
-        ASSERTION.assertion(equipo1!=null, "el equipo no es válido");
-        ASSERTION.assertion(equipo2!=null, "el equipo no es valido");
-        this.lugar = lugar;
-        this.fechaEnfrentamiento = fechaEnfrentamiento;
-        this.horaEnfrentamiento = horaEnfrentamiento;
-        this.equipo1 = equipo1;
-        this.equipo2 = equipo2;
-        this.juecez = new LinkedList<>();
-        this.estadoPartido = EstadoPartido.PENDIENTE;
-    }
-
-    public Enfrentamiento(Lugar lugar, LocalDate fechaEnfrentamiento,
-                          LocalDateTime horaEnfrentamiento, Equipo equipo1, Equipo equipo2, Juez juez) {
-        ASSERTION.assertion(lugar != null, "El lugar no es válido");
-        ASSERTION.assertion(fechaEnfrentamiento != null, "La fecha de enfrentamiento no es válida");
-        ASSERTION.assertion(horaEnfrentamiento != null, "La hora de enfrentamiento no es válida");
-        ASSERTION.assertion(equipo1 != null, "El equipo 1 no es válido");
-        ASSERTION.assertion(equipo2 != null, "El equipo 2 no es válido");
-        ASSERTION.assertion(juez != null, "El juez no es válido");
-
-        this.lugar = lugar;
-        this.fechaEnfrentamiento = fechaEnfrentamiento;
-        this.horaEnfrentamiento = horaEnfrentamiento;
-        this.equipo1 = equipo1;
-        this.equipo2 = equipo2;
-        this.juecez = new LinkedList<>();
-        this.juecez.add(juez);
-        this.estadoPartido = EstadoPartido.PENDIENTE;
-    } */

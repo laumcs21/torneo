@@ -11,7 +11,7 @@ import static co.edu.uniquindio.poo.util.AssertionUtil.ASSERTION;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class Juez extends Persona {
     private final String licencia;
@@ -32,12 +32,16 @@ public class Juez extends Persona {
         return licencia;
     }
 
-
-
-    public List<Enfrentamiento> obtenerEnfrentamientosPorJuez(String numeroLicencia) {
-        return enfrentamientos.stream()
-                .filter(enfrentamiento -> enfrentamiento.getJueces().stream()
-                        .anyMatch(juez -> juez.getLicencia().equals(numeroLicencia)))
-                .collect(Collectors.toList());
+// lista de enfrentamientos por licencia del juez
+    public List<Enfrentamiento> obtenerEnfrentamientosJuez(Torneo torneo) {
+        List<Enfrentamiento> enfrentamientosDelJuez = new ArrayList<>();
+    
+        for (Enfrentamiento enfrentamiento : torneo.getEnfrentamientos()) {
+            if (enfrentamiento.contieneJuez(this.licencia)){
+                enfrentamientosDelJuez.add(enfrentamiento);
+            }
+        }
+    
+        return enfrentamientosDelJuez;
 }
 }
